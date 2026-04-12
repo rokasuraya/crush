@@ -1,34 +1,103 @@
-// Package main is the entry point for the Crush CLI.
-//
-//	@title			Crush API
-//	@version		1.0
-//	@description	Crush is a terminal-based AI coding assistant. This API is served over a Unix socket (or Windows named pipe) and provides programmatic access to workspaces, sessions, agents, LSP, MCP, and more.
-//	@contact.name	Charm
-//	@contact.url	https://charm.sh
-//	@license.name	MIT
-//	@license.url	https://github.com/charmbracelet/crush/blob/main/LICENSE
-//	@BasePath		/v1
+// crush is a terminal-based AI assistant powered by large language models.
+// It is a fork of charmbracelet/crush with additional features and improvements.
 package main
 
 import (
-	"log/slog"
-	"net/http"
-	_ "net/http/pprof"
+	"fmt"
 	"os"
 
-	"github.com/charmbracelet/crush/internal/cmd"
-	_ "github.com/joho/godotenv/autoload"
+	"github.com/charmbracelet/crush/internal/app"
+	"github.com/charmbracelet/crush/internal/config"
+	"github.com/spf13/cobra"
+)
+
+var (
+	// Version is the current version of crush, injected at build time.
+	Version = "dev"
+	// CommitSHA is the git commit SHA, injected at build time.
+	CommitSHA = "none"
 )
 
 func main() {
-	if os.Getenv("CRUSH_PROFILE") != "" {
-		go func() {
-			slog.Info("Serving pprof at localhost:6060")
-			if httpErr := http.ListenAndServe("localhost:6060", nil); httpErr != nil {
-				slog.Error("Failed to pprof listen", "error", httpErr)
+	if err := rootCmd().Execute(); err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+}
+
+func rootCmd() *cobra.Command {
+	var cfgFile string
+	var modelFlag string
+	var debugFlag bool
+
+	cmd := &cobra.Command{
+		Use:     "crush",
+		Short:   "A terminal-based AI assistant",
+		Long:    `crush is a terminal-based AI assistant that helps you with coding, writing, and more.`,
+		Version: fmt.Sprintf("%s (%s)", Version, CommitSHA),
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cfg, err := config.Load(cfgFile)
+			if err != nil {
+				return fmt.Errorf("failed to load config: %w", err)
 			}
-		}()
+
+			if modelFlag != "" {
+				cfg.Model = modelFlag
+			}
+
+			if debugFlag {
+				cfg.Debug = true
+			}
+
+			// Join any positional args as an initial prompt
+			var initialPrompt string
+			if len(args) > 0 {
+				for i, arg := range args {
+					if i > 0 {
+						initialPrompt += " "
+					}
+					initialPrompt += arg
+				}
+			}
+
+			return app.Run(cfg, initialPrompt)
+		},
 	}
 
-	cmd.Execute()
+	cmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "path to config file (default: $HOME/.config/crush/config.yaml)")
+	cmd.PersistentFlags().StringVarP(&modelFlag, "model", "m", "", "AI model to use (overrides config)")
+	cmd.PersistentFlags().BoolVarP(&debugFlag, "debug", "d", false, "enable debug logging")
+
+	cmd.AddCommand(versionCmd())
+	cmd.AddCommand(configCmd())
+
+	return cmd
+}
+
+func versionCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "version",
+		Short: "Print version information",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("crush version %s (commit: %s)\n", Version, CommitSHA)
+		},
+	}
+}
+
+func configCmd() *cobra.Command {
+	return &cobra.Command{
+		Use:   "config",
+		Short: "Manage crush configuration",
+		Long:  `View and manage crush configuration settings.`,
+		RunE: func(cmd *cobra.Command, args []string) error {
+			cfg, err := config.Load("")
+			if err != nil {
+				return fmt.Errorf("failed to load config: %w", err)
+			}
+			fmt.Printf("Config file: %s\n", cfg.Path)
+			fmt.Printf("Model:       %s\n", cfg.Model)
+			fmt.Printf("Debug:       %v\n", cfg.Debug)
+			return nil
+		},
+	}
 }

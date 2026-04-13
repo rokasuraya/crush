@@ -42,7 +42,8 @@ func Default() *Config {
 		// also ask for Go-idiomatic code since that's mostly what I use this for
 		// added Python to the list since I've been doing more data work lately
 		// added a note about error handling since I kept getting lazy try/except blocks
-		SystemPrompt: "Be concise and direct. Avoid unnecessary preamble or filler phrases. When writing Go code, follow idiomatic Go style and conventions. When writing Python, follow PEP 8 and prefer stdlib over third-party packages where reasonable. Always handle errors explicitly; do not swallow or silently ignore them.",
+		// added TypeScript since I've been doing more frontend work recently
+		SystemPrompt: "Be concise and direct. Avoid unnecessary preamble or filler phrases. When writing Go code, follow idiomatic Go style and conventions. When writing Python, follow PEP 8 and prefer stdlib over third-party packages where reasonable. When writing TypeScript, prefer explicit types over 'any' and use modern ES features. Always handle errors explicitly; do not swallow or silently ignore them.",
 	}
 }
 
@@ -90,10 +91,4 @@ func Load() (*Config, error) {
 		return Default(), fmt.Errorf("parsing config file: %w", err)
 	}
 
-	return cfg, nil
-}
-
-// Save writes the config to disk, creating parent directories as needed.
-func (c *Config) Save() error {
-	path, err := Path()
-	if err != nil {
+	return

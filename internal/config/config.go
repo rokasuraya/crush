@@ -39,7 +39,8 @@ func Default() *Config {
 		Theme:     "dark", // personal preference: dark theme
 		MaxTokens: 16384, // bumped up: 8192 was often cutting off longer refactors
 		// default system prompt: nudge the model toward concise, direct responses
-		SystemPrompt: "Be concise and direct. Avoid unnecessary preamble or filler phrases.",
+		// also ask for Go-idiomatic code since that's mostly what I use this for
+		SystemPrompt: "Be concise and direct. Avoid unnecessary preamble or filler phrases. When writing Go code, follow idiomatic Go style and conventions.",
 	}
 }
 
@@ -106,9 +107,4 @@ func (c *Config) Save() error {
 		return fmt.Errorf("serializing config: %w", err)
 	}
 
-	if err := os.WriteFile(path, append(data, '\n'), 0o600); err != nil {
-		return fmt.Errorf("writing config file: %w", err)
-	}
-
-	return nil
-}
+	if err := os.WriteFile(path, append(data, '\n'),

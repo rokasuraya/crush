@@ -41,7 +41,8 @@ func Default() *Config {
 		// default system prompt: nudge the model toward concise, direct responses
 		// also ask for Go-idiomatic code since that's mostly what I use this for
 		// added Python to the list since I've been doing more data work lately
-		SystemPrompt: "Be concise and direct. Avoid unnecessary preamble or filler phrases. When writing Go code, follow idiomatic Go style and conventions. When writing Python, follow PEP 8 and prefer stdlib over third-party packages where reasonable.",
+		// added a note about error handling since I kept getting lazy try/except blocks
+		SystemPrompt: "Be concise and direct. Avoid unnecessary preamble or filler phrases. When writing Go code, follow idiomatic Go style and conventions. When writing Python, follow PEP 8 and prefer stdlib over third-party packages where reasonable. Always handle errors explicitly; do not swallow or silently ignore them.",
 	}
 }
 
@@ -96,11 +97,3 @@ func Load() (*Config, error) {
 func (c *Config) Save() error {
 	path, err := Path()
 	if err != nil {
-		return err
-	}
-
-	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
-		return fmt.Errorf("creating config directory: %w", err)
-	}
-
-	data, err := json.Marshal

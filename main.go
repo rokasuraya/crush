@@ -62,7 +62,8 @@ func rootCmd() *cobra.Command {
 
 	cmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "path to config file (default: $HOME/.config/crush/config.yaml)")
 	cmd.PersistentFlags().StringVarP(&modelFlag, "model", "m", "", "AI model to use (overrides config)")
-	cmd.PersistentFlags().BoolVarP(&debugFlag, "debug", "d", false, "enable debug logging")
+	// Changed short flag from -d to -D to avoid conflict with potential future --dir flag
+	cmd.PersistentFlags().BoolVarP(&debugFlag, "debug", "D", false, "enable debug logging")
 
 	cmd.AddCommand(versionCmd())
 	cmd.AddCommand(configCmd())

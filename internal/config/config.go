@@ -40,7 +40,8 @@ func Default() *Config {
 		MaxTokens: 16384, // bumped up: 8192 was often cutting off longer refactors
 		// default system prompt: nudge the model toward concise, direct responses
 		// also ask for Go-idiomatic code since that's mostly what I use this for
-		SystemPrompt: "Be concise and direct. Avoid unnecessary preamble or filler phrases. When writing Go code, follow idiomatic Go style and conventions.",
+		// added Python to the list since I've been doing more data work lately
+		SystemPrompt: "Be concise and direct. Avoid unnecessary preamble or filler phrases. When writing Go code, follow idiomatic Go style and conventions. When writing Python, follow PEP 8 and prefer stdlib over third-party packages where reasonable.",
 	}
 }
 
@@ -102,9 +103,4 @@ func (c *Config) Save() error {
 		return fmt.Errorf("creating config directory: %w", err)
 	}
 
-	data, err := json.MarshalIndent(c, "", "  ")
-	if err != nil {
-		return fmt.Errorf("serializing config: %w", err)
-	}
-
-	if err := os.WriteFile(path, append(data, '\n'),
+	data, err := json.Marshal

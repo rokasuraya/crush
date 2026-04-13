@@ -87,7 +87,11 @@ func configCmd() *cobra.Command {
 		Short: "Manage crush configuration",
 		Long:  `View and manage crush configuration settings.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cfg, err := config.Load("")
+			// Use cfgFile from parent flag if provided; fall back to default discovery.
+			// Accessing the flag here via cmd.Root() so the -c flag is respected
+			// even when running `crush config`.
+			cfgFile, _ := cmd.Root().PersistentFlags().GetString("config")
+			cfg, err := config.Load(cfgFile)
 			if err != nil {
 				return fmt.Errorf("failed to load config: %w", err)
 			}

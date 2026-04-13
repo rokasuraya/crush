@@ -68,6 +68,9 @@ func rootCmd() *cobra.Command {
 	cmd.AddCommand(versionCmd())
 	cmd.AddCommand(configCmd())
 
+	// Disable the default completion command since I don't use it
+	cmd.CompletionOptions.DisableDefaultCmd = true
+
 	return cmd
 }
 

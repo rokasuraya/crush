@@ -38,6 +38,8 @@ func Default() *Config {
 		Model:     "claude-opus-4-5",
 		Theme:     "dark", // personal preference: dark theme
 		MaxTokens: 16384, // bumped up: 8192 was often cutting off longer refactors
+		// default system prompt: nudge the model toward concise, direct responses
+		SystemPrompt: "Be concise and direct. Avoid unnecessary preamble or filler phrases.",
 	}
 }
 

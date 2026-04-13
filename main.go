@@ -71,6 +71,9 @@ func rootCmd() *cobra.Command {
 	// Disable the default completion command since I don't use it
 	cmd.CompletionOptions.DisableDefaultCmd = true
 
+	// Hide the default 'help' command from the usage output to keep things tidy
+	cmd.SetHelpCommand(&cobra.Command{Hidden: true})
+
 	return cmd
 }
 
@@ -101,8 +104,6 @@ func configCmd() *cobra.Command {
 			fmt.Printf("Config file: %s\n", cfg.Path)
 			fmt.Printf("Model:       %s\n", cfg.Model)
 			fmt.Printf("Debug:       %v\n", cfg.Debug)
-			// Print version so it's easy to confirm which build is in use
-			fmt.Printf("Version:     %s (%s)\n", Version, CommitSHA)
 			return nil
 		},
 	}

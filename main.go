@@ -98,7 +98,7 @@ func configCmd() *cobra.Command {
 			fmt.Printf("Config file: %s\n", cfg.Path)
 			fmt.Printf("Model:       %s\n", cfg.Model)
 			fmt.Printf("Debug:       %v\n", cfg.Debug)
-			// Also print the version so it's easy to confirm which build is in use
+			// Print version so it's easy to confirm which build is in use
 			fmt.Printf("Version:     %s (%s)\n", Version, CommitSHA)
 			return nil
 		},

@@ -74,6 +74,9 @@ func rootCmd() *cobra.Command {
 	// Hide the default 'help' command from the usage output to keep things tidy
 	cmd.SetHelpCommand(&cobra.Command{Hidden: true})
 
+	// Don't show "[flags]" in usage when no flags are provided on the command line
+	cmd.DisableFlagsInUseLine = true
+
 	return cmd
 }
 
@@ -100,11 +103,3 @@ func configCmd() *cobra.Command {
 			cfg, err := config.Load(cfgFile)
 			if err != nil {
 				return fmt.Errorf("failed to load config: %w", err)
-			}
-			fmt.Printf("Config file: %s\n", cfg.Path)
-			fmt.Printf("Model:       %s\n", cfg.Model)
-			fmt.Printf("Debug:       %v\n", cfg.Debug)
-			return nil
-		},
-	}
-}

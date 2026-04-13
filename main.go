@@ -5,6 +5,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/charmbracelet/crush/internal/app"
 	"github.com/charmbracelet/crush/internal/config"
@@ -52,12 +53,7 @@ func rootCmd() *cobra.Command {
 			// Join any positional args as an initial prompt
 			var initialPrompt string
 			if len(args) > 0 {
-				for i, arg := range args {
-					if i > 0 {
-						initialPrompt += " "
-					}
-					initialPrompt += arg
-				}
+				initialPrompt = strings.Join(args, " ")
 			}
 
 			return app.Run(cfg, initialPrompt)

@@ -77,6 +77,10 @@ func rootCmd() *cobra.Command {
 	// Don't show "[flags]" in usage when no flags are provided on the command line
 	cmd.DisableFlagsInUseLine = true
 
+	// Silence usage output on error — it clutters the terminal when something
+	// goes wrong and the error message alone is usually sufficient.
+	cmd.SilenceUsage = true
+
 	return cmd
 }
 
@@ -100,8 +104,4 @@ func configCmd() *cobra.Command {
 			// Use cfgFile from parent flag if provided; fall back to default discovery.
 			// Accessing the flag here via cmd.Root() so the -c flag is respected
 			// even when running `crush config`.
-			cfgFile, _ := cmd.Root().PersistentFlags().GetString("config")
-			return config.ShowConfig(cfgFile)
-		},
-	}
-}
+			cfgFile, _ := 

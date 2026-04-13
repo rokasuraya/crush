@@ -36,8 +36,8 @@ type Config struct {
 func Default() *Config {
 	return &Config{
 		Model:     "claude-opus-4-5",
-		Theme:     "light", // personal preference: light theme
-		MaxTokens: 4096,   // lowered to reduce accidental large responses
+		Theme:     "dark", // personal preference: dark theme
+		MaxTokens: 8192,  // increased for longer, more complete responses
 	}
 }
 

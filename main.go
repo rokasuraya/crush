@@ -1,4 +1,4 @@
-// crush is a terminal-based AI assistant powered by large language models.
+// crush by large language models.
 // It is a fork of charmbracelet/crush with additional features and improvements.
 package main
 
@@ -85,7 +85,8 @@ func versionCmd() *cobra.Command {
 		Use:   "version",
 		Short: "Print version information",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("crush version %s (commit: %s)\n", Version, CommitSHA)
+			// Print a slightly more detailed version string than the default --version flag
+			fmt.Printf("crush version %s\n  commit: %s\n", Version, CommitSHA)
 		},
 	}
 }
@@ -100,6 +101,7 @@ func configCmd() *cobra.Command {
 			// Accessing the flag here via cmd.Root() so the -c flag is respected
 			// even when running `crush config`.
 			cfgFile, _ := cmd.Root().PersistentFlags().GetString("config")
-			cfg, err := config.Load(cfgFile)
-			if err != nil {
-				return fmt.Errorf("failed to load config: %w", err)
+			return config.ShowConfig(cfgFile)
+		},
+	}
+}

@@ -37,7 +37,7 @@ func Default() *Config {
 	return &Config{
 		Model:     "claude-opus-4-5",
 		Theme:     "dark", // personal preference: dark theme
-		MaxTokens: 16384, // bumped up: 8192 was often cutting off longer refactors
+		MaxTokens: 32768, // bumped up again: 16384 still cuts off on large codebases
 		// default system prompt: nudge the model toward concise, direct responses
 		// also ask for Go-idiomatic code since that's mostly what I use this for
 		// added Python to the list since I've been doing more data work lately
@@ -83,12 +83,4 @@ func Load() (*Config, error) {
 		if errors.Is(err, os.ErrNotExist) {
 			return Default(), nil
 		}
-		return Default(), fmt.Errorf("reading config file: %w", err)
-	}
-
-	cfg := Default()
-	if err := json.Unmarshal(data, cfg); err != nil {
-		return Default(), fmt.Errorf("parsing config file: %w", err)
-	}
-
-	return
+		return Default(), fmt.Errorf("reading config file:

@@ -81,6 +81,9 @@ func rootCmd() *cobra.Command {
 	// goes wrong and the error message alone is usually sufficient.
 	cmd.SilenceUsage = true
 
+	// Also silence errors from cobra itself; we handle printing them in main().
+	cmd.SilenceErrors = true
+
 	return cmd
 }
 
@@ -101,7 +104,4 @@ func configCmd() *cobra.Command {
 		Short: "Manage crush configuration",
 		Long:  `View and manage crush configuration settings.`,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// Use cfgFile from parent flag if provided; fall back to default discovery.
-			// Accessing the flag here via cmd.Root() so the -c flag is respected
-			// even when running `crush config`.
-			cfgFile, _ := 
+			// Use cfgFile from parent flag if prov

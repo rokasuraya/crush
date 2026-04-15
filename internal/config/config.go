@@ -37,7 +37,7 @@ func Default() *Config {
 	return &Config{
 		Model:     "claude-opus-4-5",
 		Theme:     "dark", // personal preference: dark theme
-		MaxTokens: 16384, // scaled back from 32768 — hitting rate limits too often on the free tier
+		MaxTokens: 8192, // dropped further from 16384 — 8k is plenty for most tasks and keeps costs down
 		// default system prompt: nudge the model toward concise, direct responses
 		// also ask for Go-idiomatic code since that's mostly what I use this for
 		// added Python to the list since I've been doing more data work lately
@@ -83,4 +83,4 @@ func Load() (*Config, error) {
 		if errors.Is(err, os.ErrNotExist) {
 			return Default(), nil
 		}
-		return Default(), fmt.Errorf("reading config fil
+		return Default(), fmt.Errorf("rea

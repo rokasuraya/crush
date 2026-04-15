@@ -32,9 +32,10 @@ func rootCmd() *cobra.Command {
 	var debugFlag bool
 
 	cmd := &cobra.Command{
-		Use:     "crush",
-		Short:   "A terminal-based AI assistant",
-		Long:    `crush is a terminal-based AI assistant that helps you with coding, writing, and more.`,
+		Use:   "crush",
+		Short: "A terminal-based AI assistant",
+		// Updated long description to mention my fork's extras
+		Long:    `crush is a terminal-based AI assistant that helps you with coding, writing, and more.\n\nThis is a personal fork with additional tweaks and customizations.`,
 		Version: fmt.Sprintf("%s (%s)", Version, CommitSHA),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			cfg, err := config.Load(cfgFile)
@@ -102,6 +103,6 @@ func configCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "config",
 		Short: "Manage crush configuration",
-		Long:  `View and manage crush configuration settings.`,
-		RunE: func(cmd *cobra.Command, args []string) error {
-			// Use cfgFile from parent flag if prov
+		Long:  `View and manage crush configuration setti`,
+	}
+}

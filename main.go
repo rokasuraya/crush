@@ -61,7 +61,14 @@ func rootCmd() *cobra.Command {
 		},
 	}
 
-	cmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "path to config file (default: $HOME/.config/crush/config.yaml)")
+	// Default config path uses XDG_CONFIG_HOME if set, falling back to ~/.config
+	defaultCfg := os.Getenv("XDG_CONFIG_HOME")
+	if defaultCfg == "" {
+		defaultCfg = os.Getenv("HOME") + "/.config"
+	}
+	defaultCfg = defaultCfg + "/crush/config.yaml"
+
+	cmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "path to config file (default: "+defaultCfg+")")
 	cmd.PersistentFlags().StringVarP(&modelFlag, "model", "m", "", "AI model to use (overrides config)")
 	// Changed short flag from -d to -D to avoid conflict with potential future --dir flag
 	cmd.PersistentFlags().BoolVarP(&debugFlag, "debug", "D", false, "enable debug logging")
@@ -100,9 +107,4 @@ func versionCmd() *cobra.Command {
 }
 
 func configCmd() *cobra.Command {
-	return &cobra.Command{
-		Use:   "config",
-		Short: "Manage crush configuration",
-		Long:  `View and manage crush configuration setti`,
-	}
-}
+	return &
